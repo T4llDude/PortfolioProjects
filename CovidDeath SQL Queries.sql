@@ -339,7 +339,7 @@ SELECT
 [TotalDeaths],
 ([TotalDeaths]/[TotalCases])*100 as 'Death %'
 FROM DeathIfInfected
-WHERE location = 'United States'
+--WHERE location = 'United States'
 
 
 ----------------------------------------------------------------------------------------------------
