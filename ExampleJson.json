@@ -1,0 +1,28 @@
+{
+    "name" : {
+      "first" : "Boba",
+      "last" : "Fett",
+      "full" : "Boba Fett"
+    },
+    "age" : {
+      "range" : "50-59",
+      "value" : 55
+    },
+    "gender" : "Male",
+    "household" : {
+      "familyInfo" : {
+        "householdSize" : "2",
+        "numberOfAdults" : "1",
+        "numberOfChildren" : "1"
+      },
+      "homeInfo" : {
+        "housingType" : "StarShip",
+        "householdEducation" : "HomeSchool",
+        "householdOccupation" : "Bounty-Hunter"
+      },
+      "finance" : {
+        "income" : "$600,000 - $699,999",
+        "netWorth" : "$100,000,000 - $200,000,000"
+      }
+    }
+  }
