@@ -1,0 +1,21 @@
+USE [SWLightSaberStore]
+GO
+
+/****** Object:  Table [dbo].[Product_Color]    Script Date: 1/12/2025 4:03:57 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Product_Color](
+	[Id] [int] NOT NULL,
+	[Color] [varchar](25) NOT NULL,
+ CONSTRAINT [PK_Product_Color] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
