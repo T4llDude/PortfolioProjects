@@ -1,0 +1,7 @@
+housing_env/
+.env
+__pycache__/
+*.pyc
+*.csv
+test_outputs/
+*.pbix
