@@ -8,16 +8,11 @@ AS $$
 **          for all NULL/placeholder cleanup. Processes only the most recent batch.
 ** Author: CCieri + Claude
 ** Created: 2026-06-09
-** Updated: 2026-09-02 — replaced inline COALESCE/CASE + ad hoc UPDATE with
-**          a single call to stg.normalize_geography() per row.
 ** Usage: CALL stg.load_dim_geography()
 *****************************************************************************/
 
 BEGIN
     -- #1. CREATE TEMP TABLE from most recent batch, normalizing zip/city/county/state
-    --     via stg.normalize_geography() as each row is pulled. DISTINCT now dedups on
-    --     normalized values, so rows that only differed by whitespace, casing of a
-    --     placeholder, or a null vs. an empty string collapse correctly.
     DROP TABLE IF EXISTS temp_geography;
 
     CREATE TEMP TABLE temp_geography AS
@@ -31,8 +26,6 @@ BEGIN
     WHERE s.batch_id = (SELECT MAX(batch_id) FROM stg.batch);
 
     -- #2. INSERT into dim.geography (equivalent of SQL Server MERGE).
-    --     No COALESCE/NULLIF/TRIM needed here anymore — temp_geography is
-    --     already fully normalized.
     INSERT INTO dim.geography (zip_code, city, county, state_code)
     SELECT DISTINCT
         zip_code,

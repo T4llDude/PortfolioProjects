@@ -1,17 +1,20 @@
 -- =============================================================================
--- stg.normalize_text / stg.normalize_geography
---
--- T-SQL mental model notes:
---   - LANGUAGE plpgsql is required; Postgres has no default procedural language
---     for function bodies the way T-SQL just assumes you're writing T-SQL.
---   - IMMUTABLE tells Postgres the output depends only on the inputs (no table
---     reads, no side effects). There's no direct T-SQL equivalent — closest
---     analogy is a deterministic scalar UDF, which T-SQL doesn't formally mark
---     either way.
---   - RETURNS TABLE(...) + RETURN QUERY is Postgres's inline table-valued
---     function. Instead of populating a @ReturnTable and returning it, you
---     write one SELECT and hand it to RETURN QUERY.
---   - Call it with CROSS JOIN LATERAL, which is Postgres's CROSS APPLY.
+-- Functions: stg.normalize_text / stg.normalize_geography
+-- Description: Utilizes two functions to replace NULL or place-holder values 
+--              with the same default 'Unknown' values. 
+-- Usage:
+-- 1. load_dim_geography()
+-- SELECT s.property_id, n.zip_code, n.city, n.county, n.state
+-- FROM stg.listings s
+-- CROSS JOIN LATERAL stg.normalize_geography(s.zip_code, s.city, s.county, s.state) AS n;
+
+-- 2. load_fact_listing()
+-- UPDATE temp_fact_listing t
+-- SET geography_id = g.geography_id
+-- FROM stg.normalize_geography(t.raw_zip_code, t.raw_city, t.raw_county, t.raw_state) AS n
+-- JOIN dim.geography g
+--   ON g.zip_code = n.zip_code AND g.city = n.city AND g.county = n.county
+-- WHERE ...;
 -- =============================================================================
 
 -- Single-field cleanup, reusable across geography and (per the project's own
@@ -64,20 +67,3 @@ BEGIN
         stg.normalize_text(p_state);
 END;
 $$;
-
--- =============================================================================
--- Usage — load_dim_geography()
--- =============================================================================
--- SELECT s.property_id, n.zip_code, n.city, n.county, n.state
--- FROM stg.listings s
--- CROSS JOIN LATERAL stg.normalize_geography(s.zip_code, s.city, s.county, s.state) AS n;
-
--- =============================================================================
--- Usage — load_fact_listing() geography match
--- =============================================================================
--- UPDATE temp_fact_listing t
--- SET geography_id = g.geography_id
--- FROM stg.normalize_geography(t.raw_zip_code, t.raw_city, t.raw_county, t.raw_state) AS n
--- JOIN dim.geography g
---   ON g.zip_code = n.zip_code AND g.city = n.city AND g.county = n.county
--- WHERE ...;
